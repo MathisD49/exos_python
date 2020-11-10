@@ -23,3 +23,5 @@ class CarreTest:
 
 a = CarreTest()
 print(a.test())
+
+#facultatif
