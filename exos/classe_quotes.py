@@ -26,22 +26,25 @@ class LireCSV:
                 print(" ".join(a))
 
 
+class RecupererDonnee:
+    def __init__(self):
+        pass
 
+    def recuperer(self):
+        nombre_pages = int(input("nombre de pages à parcourir : "))
+        for i in range(nombre_pages+1):
+            r = requests.get("http://quotes.toscrape.com/page/" + str(i))
+            soup = BeautifulSoup(r.text, "html.parser")
+            div_quotes = soup.find_all("div", class_="quote")
+            for div_quote in div_quotes:
+                tag_citation = []
+                quote = div_quote.find("span", class_="text")
+                author = div_quote.find("small", class_="author")
+                tags = div_quote.find_all("a", class_="tag")
+                for tag in tags:
+                    tag_citation.append(tag.text)
 
-nombre_pages = int(input("nombre de pages à parcourir : "))
-for i in range(nombre_pages+1):
-    r = requests.get("http://quotes.toscrape.com/page/" + str(i))
-    soup = BeautifulSoup(r.text, "html.parser")
-    div_quotes = soup.find_all("div", class_="quote")
-    for div_quote in div_quotes:
-        tag_citation = []
-        quote = div_quote.find("span", class_="text")
-        author = div_quote.find("small", class_="author")
-        tags = div_quote.find_all("a", class_="tag")
-        for tag in tags:
-            tag_citation.append(tag.text)
+                ma_citation = EcrireCSV(quote.text, author.text, tag_citation).enregistrer()
 
-        maCitation = EcrireCSV(quote.text, author.text, tag_citation).enregistrer()
-
-a = LireCSV("classe_quotes.csv")
-a.lire()
+RecupererDonnee().recuperer()
+LireCSV("classe_quotes.csv").lire()
